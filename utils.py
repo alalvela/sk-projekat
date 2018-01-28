@@ -33,8 +33,9 @@ def remove_noise_gray(gray):
 
 
 def draw_lines(img, lines):
-    for l in lines:
-        cv2.line(img, (l[0], l[1]), (l[2], l[3]), (0, 0, 255), 2)
+    for i, l in enumerate(lines):
+        color = (255, 255, 0) if i % 2 == 0 else (0, 255, 255)
+        cv2.line(img, (l[0], l[1]), (l[2], l[3]), color, 2)
     return img
 
 

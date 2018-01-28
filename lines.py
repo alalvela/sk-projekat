@@ -71,3 +71,11 @@ def get_longest_line(lines):
     x2 = max(lines[:, 2])
     y2 = min(lines[:, 3])
     return [x1, y1, x2, y2]
+
+
+def longest_line(lines):
+    x1 = min(lines[:, 0, 0])
+    y1 = max(lines[:, 0, 1])
+    x2 = max(lines[:, 0, 2])
+    y2 = min(lines[:, 0, 3])
+    return [x1, y1, x2, y2]    

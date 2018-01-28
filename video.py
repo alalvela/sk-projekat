@@ -1,22 +1,42 @@
 import cv2
 import utils as ut
 import lines as l
+import tres as t
+import numpy as np
 
 cap = cv2.VideoCapture('videos/video-3.avi')
 
 while cap.isOpened():
     ret, frame = cap.read()
 
-    image_bin = ut.img_to_bin(frame)
+    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-    lines = l.get_line_coords(image_bin)
-    classes = l.classify_lines(lines)
-    l1, l2 = l.get_final_lines(classes)
-    ret = ut.draw_lines(frame, [l1, l2])
+    blue_bin = t.get_blue_line(frame)
+    green_bin = t.get_green_line(frame)
 
-    ret = ut.select_roi(ret, image_bin)
+    blue_bin = blue_bin.astype(np.uint8) * 255
+    green_bin = green_bin.astype(np.uint8) * 255
+
+    blue_coords = l.get_line_coords(blue_bin)
+    b = l.longest_line(blue_coords)
+
+    green_coords = l.get_line_coords(green_bin)
+    g = l.longest_line(green_coords)
+
+    lin = ut.draw_lines(frame, [b, g])
     
-    cv2.imshow('frame', ret)
+    # print blue_coords
+
+    # image_bin = ut.img_to_bin(frame)
+
+    # lines = l.get_line_coords(image_bin)
+    # classes = l.classify_lines(lines)
+    # l1, l2 = l.get_final_lines(classes)
+    # ret = ut.draw_lines(frame, [l1, l2])
+
+    # ret = ut.select_roi(ret, image_bin)
+
+    cv2.imshow('frame', lin)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
