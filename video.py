@@ -4,12 +4,15 @@ import lines as l
 import tres as t
 import numpy as np
 
-cap = cv2.VideoCapture('videos/video-3.avi')
+cap = cv2.VideoCapture('videos/video-4.avi')
 
 while cap.isOpened():
     ret, frame = cap.read()
 
     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+
+
 
     blue_bin = t.get_blue_line(frame)
     green_bin = t.get_green_line(frame)
@@ -33,10 +36,12 @@ while cap.isOpened():
     # classes = l.classify_lines(lines)
     # l1, l2 = l.get_final_lines(classes)
     # ret = ut.draw_lines(frame, [l1, l2])
-
-    # ret = ut.select_roi(ret, image_bin)
+    lin2bin = ut.img_to_bin(lin)
+    ret = ut.select_roi(lin, lin2bin)
 
     cv2.imshow('frame', lin)
+    # cv2.imshow('frame', blue_bin)
+
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 

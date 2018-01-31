@@ -1,4 +1,5 @@
 from keras.models import load_model
+# from keras.datasets import mnist
 import matplotlib.pyplot as plt
 
 
@@ -20,9 +21,9 @@ model = load_model(MODEL_PATH)
 # print '************** LOADED DATA ******************'
 
 
-# plt.imshow(x_test[10])
+# plt.imshow(x_test[23], 'gray')
 # plt.show()
 
 
-# sc = model.predict_classes(x_test[10].reshape((1, 1, 28, 28)))
+# sc = model.predict_classes(x_test[23].reshape((1, 1, 28, 28)))
 # print 'CLASS:' + str(sc)
