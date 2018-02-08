@@ -79,7 +79,7 @@ def scale_to_range(image):
 
 def select_min_roi(image, image_bin):
     img, contours, hierarchy = cv2.findContours(
-        image_bin.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+        image_bin.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
     regions = []
     for contour in contours:
@@ -96,3 +96,20 @@ def select_min_roi(image, image_bin):
     regions = sorted(regions, key=lambda item: item[1][0])
     sorted_regions = [region[0] for region in regions]
     return image, regions
+
+
+def show_images(images, cols=1, titles=None):
+    
+    assert((titles is None)or (len(images) == len(titles)))
+    n_images = len(images)
+    if titles is None:
+        titles = ['Image (%d)' % i for i in range(1, n_images + 1)]
+    fig = plt.figure()
+    for n, (image, title) in enumerate(zip(images, titles)):
+        a = fig.add_subplot(cols, np.ceil(n_images / float(cols)), n + 1)
+        if image.ndim == 2:
+            plt.gray()
+        plt.imshow(image)
+        a.set_title(title)
+    fig.set_size_inches(np.array(fig.get_size_inches()) * n_images)
+    plt.show()
