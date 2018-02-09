@@ -7,13 +7,32 @@ from keras.layers import Convolution2D, MaxPooling2D
 from keras.utils import np_utils
 from keras.datasets import mnist
 from matplotlib import pyplot as plt
+import cv2
+import roi_preproccessing as rp
+import utils as u
 
 
-MODEL_PATH = 'cnn_model.h5'
+MODEL_PATH = 'cnn_model_bin.h5'
+
+
+def prepare_bin(image):
+    image = cv2.GaussianBlur(image, (5, 5), 0)
+    ret = rp.prepr(image)
+    return ret
 
 
 def init_data():
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
+    kernel = np.ones((3, 3), np.uint8)
+
+#****************
+    x_train = [prepare_bin(img) for img in x_train]
+    x_test = [prepare_bin(img) for img in x_test]
+
+#****************
+
+    x_train = np.array(x_train)
+    x_test = np.array(x_test)
 
     # additional dimension for depth of input /theano
     x_train = x_train.reshape(x_train.shape[0], 1, 28, 28)
@@ -51,8 +70,9 @@ model.compile(loss='categorical_crossentropy',
               metrics=['accuracy'])
 
 model.fit(train[0], train[1],
-          batch_size=32, epochs=3, verbose=1)
+          batch_size=32, epochs=12, verbose=1)
 
 score = model.evaluate(test[0], test[1], verbose=0)
 
+print score
 model.save(MODEL_PATH)

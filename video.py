@@ -4,15 +4,18 @@ import lines as l
 import tres as t
 import numpy as np
 
-cap = cv2.VideoCapture('videos/video-4.avi')
+cap = cv2.VideoCapture('videos/video-9.avi')
+
+cnt = 0
 
 while cap.isOpened():
     ret, frame = cap.read()
+    cnt += 1
+    
+    if not ret:
+        break
 
     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-
-
-
 
     blue_bin = t.get_blue_line(frame)
     green_bin = t.get_green_line(frame)
@@ -22,9 +25,12 @@ while cap.isOpened():
 
     blue_coords = l.get_line_coords(blue_bin)
     b = l.longest_line(blue_coords)
+    print b
 
     green_coords = l.get_line_coords(green_bin)
     g = l.longest_line(green_coords)
+    print g
+
 
     lin = ut.draw_lines(frame, [b, g])
     
@@ -39,6 +45,8 @@ while cap.isOpened():
     lin2bin = ut.img_to_bin(lin)
     ret = ut.select_roi(lin, lin2bin)
 
+    if cnt == 40:
+        break
     cv2.imshow('frame', lin)
     # cv2.imshow('frame', blue_bin)
 

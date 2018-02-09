@@ -8,7 +8,6 @@ from scipy import ndimage
 import matplotlib.pyplot as plt
 import roi_preproccessing as rp
 import cnn_predict as p
-import novi as n
 
 cc = -1
 
@@ -124,7 +123,7 @@ def get_result_from_video(path):
                 if r > 0:
                     cv2.line(img, pnt, el['center'], (0, 255, 25), 1)
                     c = (25, 25, 255)
-                    if(dist < 9):
+                    if(dist < 10):
                         c = (0, 255, 160)
                         if el['pass_blue'] == False:
                             el['pass_blue'] = True
@@ -138,7 +137,7 @@ def get_result_from_video(path):
                 if r > 0:
                     cv2.line(img, pnt, el['center'], (0, 255, 25), 1)
                     c = (25, 25, 255)
-                    if(dist < 9):
+                    if(dist < 10):
                         c = (0, 255, 160)
                         if el['pass_green'] == False:
                             el['pass_green'] = True
@@ -202,18 +201,17 @@ def get_total(passed_blue, passed_green):
     most_occ_green = []
 
     for key in passed_blue:
-        global sum_blue
         el_history = passed_blue[key]['history']
 
         images_blue = []
         for i, el in enumerate(el_history):
-            if i % 50 == 0:
+            if i % 10 == 0:
                 images_blue.append(el)
 
         images_blue = [[el['img_raw'], el['size']] for el in images_blue]
-        # proccess_images_blue = [rp.preproccess_region(
-        #     image_blue[0], image_blue[1]) for image_blue in images_blue]
-        proccess_images_blue = [rp.preproccess(image_blue[0]) for image_blue in images_blue]
+        proccess_images_blue = [rp.preproccess(
+            image_blue[0]) for image_blue in images_blue]
+        
         predicted_b = [p.predict(img) for img in proccess_images_blue]
         most_common = max(set(predicted_b), key=predicted_b.count)
         most_occ.append(most_common)
@@ -221,18 +219,16 @@ def get_total(passed_blue, passed_green):
         print 'SUM BLUE: ' + str(sum_blue)
 
     for key in passed_green:
-        global sum_green
         el_history = passed_green[key]['history']
 
         images_green = []
         for i, el in enumerate(el_history):
-            if i % 50 == 0:
+            if i % 10 == 0:
                 images_green.append(el)
 
         images_green = [[el['img_raw'], el['size']] for el in images_green]
-        # proccess_images_green = [rp.preproccess_region(
-        #     image_green[0], image_green[1]) for image_green in images_green]
-        proccess_images_green = [rp.preproccess(image_green[0]) for image_green in images_green]
+        proccess_images_green = [rp.preproccess(
+            image_green[0]) for image_green in images_green]
 
         predicted_g = [p.predict(img) for img in proccess_images_green]
         most_common = max(set(predicted_g), key=predicted_g.count)

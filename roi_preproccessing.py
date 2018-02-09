@@ -6,17 +6,45 @@ from scipy import ndimage
 # import cnn_predict as p
 
 
-def preproccess(img):
+def prepr(img):     #binarno centrirano
+    img = scale(img)
+    shx, shy = getBestShift(img)
+    shifted = shift(img, shx, shy)
+    # ret, shifted = cv2.threshold(shifted, , 255, cv2.THRESH_BINARY)
+    ret, shifted = cv2.threshold(
+        shifted, 120, 255, cv2.THRESH_BINARY)
+    u.show_image_gray(shifted, True)
+    shifted = u.scale_to_range(shifted)
+    return shifted
 
-    blr = cv2.GaussianBlur(img, (0, 0), 3)
-    img = cv2.addWeighted(img, 1.3, blr, -0.7, 0)
+
+def prepare(image): #sivo kropovano
+    # image = cv2.blur(image, (3, 3))
+
+    ret, contours, hierarchy = cv2.findContours(
+        image.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+    max_cont = max(contours, key=cv2.contourArea)
+    x, y, w, h = cv2.boundingRect(max_cont)
+    image = image[y: y + h + 1, x: x + w + 1]
+    image = cv2.resize(image, (28, 28), interpolation=cv2.INTER_NEAREST)
+    return image
+
+
+def preproccess(img):   #blur centrirano
+
+    img = cv2.blur(img, (3, 3))
+
+    # blr = cv2.GaussianBlur(img, (0, 0), 3)
+    # img = cv2.addWeighted(img, 1.3, blr, -0.7, 0)
+    # img = cv2.addWeighted(img, 1.5, blr, -0.5, 0)
+
     img = scale(img)
     shx, shy = getBestShift(img)
     shifted = shift(img, shx, shy)
     shifted = u.scale_to_range(shifted)
-    shifted = shifted * 1.7
-    shifted[shifted > 1] = 1
-    # u.show_image_gray(shifted,True)
+    shifted = shifted * 0.6
+    # shifted[shifted > 1] = 1
     return shifted
 
 
