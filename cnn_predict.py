@@ -3,7 +3,6 @@ from keras.datasets import mnist
 import matplotlib.pyplot as plt
 import cv2
 import utils as u
-import novi as t
 import numpy as np
 import roi_preproccessing as rp
 
@@ -17,6 +16,7 @@ import roi_preproccessing as rp
 #     return shifted
 
 
+
 MODEL_PATH = 'cnn_model_2.h5'
 
 
@@ -25,5 +25,5 @@ def predict(image):
     return ret[0]
 
 
-
 model = load_model(MODEL_PATH)
+
